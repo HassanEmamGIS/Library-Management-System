@@ -1,0 +1,100 @@
+import os
+
+# هعمل متغير فاضي و اسيبه بعدبن هخزن فيه 
+library_catalog = {}
+
+# هعمل function  تمسح الشاشة 
+def clear_screen():
+    os.system('cls' if os.name == "nt" else "clear")
+
+# هعمل function لكل مهمة معينة و انادي عليها لوحدها 
+def add_book():
+    while True:
+        clear_screen()
+        isbn = input("Enter ISBN: ")
+        title = input("Enter title: ")
+        author = input("Enter author: ")
+        library_catalog[isbn] = {
+            "title": title,
+            "author": author,
+            "availability": True
+        }
+        print(f"BOOK '{title}', BY '{author}' added to the catalog with ISBN {isbn}.")
+        
+        # هعمل متغير و اخن فيه قيمة هل المستخدم عايز يضيف كتاب تاني و لا لا 
+        another_book = input("Do you want to add another book? (yes/no): ")
+        if another_book.lower() != 'yes':
+            break
+
+def check_out_book():
+    while True:
+        clear_screen()
+        isbn = input("Enter ISBN to check out: ")
+        if isbn in library_catalog:
+            if library_catalog[isbn]["availability"]:
+                library_catalog[isbn]["availability"] = False
+                print(f"{library_catalog[isbn]['title']} checked out successfully.")
+            else:
+                print("Sorry, the book is currently checked out.")
+        else:
+            print("Book not found in the catalog.")
+        
+        another_book_checked_out = input("Do you want to check out another book? (yes/no): ")
+        if another_book_checked_out.lower() != 'yes':
+            break
+
+def return_book():
+    while True:
+        clear_screen()
+        isbn = input("Enter ISBN to return: ")
+        if isbn in library_catalog:
+            if not library_catalog[isbn]["availability"]:
+                library_catalog[isbn]["availability"] = True
+                print(f"Book '{library_catalog[isbn]['title']}' returned successfully.")
+            else:
+                print("Sorry, the book is already available in the library.")
+        else:
+            print("Book not found in the catalog.")
+        
+        return_another_book = input("Do you want to return another book? (yes/no): ")
+        if return_another_book.lower() != 'yes':
+            break
+
+def display_catalog():
+    clear_screen()
+    if not library_catalog:
+        print("The catalog is empty.")
+    else:
+        print("Library Catalog:")
+        for isbn, book in library_catalog.items():
+            print(f"ISBN: {isbn}, Title: {book['title']}, Author: {book['author']}, Available: {'Yes' if book['availability'] else 'No'}")
+    
+    display_catalog_option = input("Do you want to go back to the main menu? (yes/no): ")
+    if display_catalog_option.lower() != 'yes':
+        return
+
+# عرض الmenu 
+while True:
+    clear_screen()
+    print("Welcome to my library system")
+    print("1. Add book")
+    print("2. Check out book")
+    print("3. Return book")
+    print("4. Display catalog")
+    print("5. Exit")
+
+    choice = input("Choose an option (1-5): ")
+
+    if choice == '1':
+        add_book()
+    elif choice == '2':
+        check_out_book()
+    elif choice == '3':
+        return_book()
+    elif choice == '4':
+        display_catalog()
+    elif choice == '5':
+        print("Exiting the library system. Goodbye!")
+        break
+    else:
+        print("Invalid choice. Please select a valid option.")
